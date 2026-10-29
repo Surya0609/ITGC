@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITGC Evidence Analyzer</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for better dark mode integration */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563; 
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans min-h-screen flex flex-col selection:bg-blue-500/30">
+
+    <!-- Navbar -->
+    <nav class="bg-gray-800 border-b border-gray-700 px-6 py-4 sticky top-0 z-50 shadow-md">
+        <div class="max-w-6xl mx-auto flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400">
+                <i class="fa-solid fa-shield-halved text-xl"></i>
+            </div>
+            <div>
+                <h1 class="font-semibold text-lg tracking-wide text-white">ITGC Evidence Analyzer</h1>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow w-full max-w-6xl mx-auto p-6 relative">
+        
+        <!-- ==================== LANDING VIEW ==================== -->
+        <div id="landing-view" class="view-section space-y-8 animate-fade-in">
+            
+            <div class="bg-gray-800 rounded-xl p-8 border border-gray-700 shadow-lg text-center md:text-left">
+                <h2 class="text-2xl font-bold text-white mb-4">Welcome to the Analyzer Workspace</h2>
+                <p class="text-gray-300 leading-relaxed mb-4 max-w-4xl">
+                    This tool analyzes configuration evidence and validates Information Technology General Controls (ITGC). It automatically maps system parameters against standard baselines to output comprehensive risk matrices and compliance reports.
+                </p>
+                <div class="inline-flex items-center bg-blue-500/10 text-blue-400 px-4 py-2 rounded border border-blue-500/20 text-sm">
+                    <i class="fa-solid fa-info-circle mr-2"></i>
+                    <strong>Non-Intrusive:</strong> This tool only parses output files. It does not modify systems, nor does it require an active connection to your servers.
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-semibold mb-6 flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-blue-400"></i> Select Target Environment
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Windows Card -->
+                    <div onclick="alert('Windows module is coming soon.')" class="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:bg-gray-750 hover:border-gray-500 transition-all cursor-pointer group flex flex-col items-center text-center">
+                        <div class="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center mb-4 group-hover:bg-blue-500/20 transition-colors">
+                            <i class="fa-brands fa-windows text-3xl text-gray-400 group-hover:text-blue-400 transition-colors"></i>
+                        </div>
+                        <h4 class="font-semibold text-white">Windows Server</h4>
+                        <p class="text-sm text-gray-400 mt-2">Active Directory & OS ITGC</p>
+                    </div>
+
+                    <!-- SAP Card -->
+                    <div onclick="alert('SAP module is coming soon.')" class="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:bg-gray-750 hover:border-gray-500 transition-all cursor-pointer group flex flex-col items-center text-center">
+                        <div class="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center mb-4 group-hover:bg-blue-500/20 transition-colors">
+                            <i class="fa-solid fa-sitemap text-3xl text-gray-400 group-hover:text-blue-400 transition-colors"></i>
+                        </div>
+                        <h4 class="font-semibold text-white">SAP ERP</h4>
+                        <p class="text-sm text-gray-400 mt-2">Basis & Security Settings</p>
+                    </div>
+
+                    <!-- SQL Card -->
+                    <div onclick="alert('SQL module is coming soon.')" class="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:bg-gray-750 hover:border-gray-500 transition-all cursor-pointer group flex flex-col items-center text-center">
+                        <div class="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center mb-4 group-hover:bg-blue-500/20 transition-colors">
+                            <i class="fa-solid fa-database text-3xl text-gray-400 group-hover:text-blue-400 transition-colors"></i>
+                        </div>
+                        <h4 class="font-semibold text-white">SQL Database</h4>
+                        <p class="text-sm text-gray-400 mt-2">DB Access & Configurations</p>
+                    </div>
+
+                    <!-- Unix/Linux Card (Active) -->
+                    <div onclick="navigateTo('setup-view')" class="bg-gray-800 border border-gray-600 rounded-xl p-6 hover:bg-gray-750 hover:border-blue-500 transition-all cursor-pointer group flex flex-col items-center text-center relative overflow-hidden ring-1 ring-transparent hover:ring-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.1)]">
+                        <div class="absolute top-0 right-0 bg-blue-600 text-xs font-bold px-2 py-1 rounded-bl-lg">ACTIVE</div>
+                        <div class="w-16 h-16 rounded-full bg-gray-700 flex items-center justify-center mb-4 group-hover:bg-blue-500/20 transition-colors">
+                            <i class="fa-solid fa-terminal text-3xl text-gray-400 group-hover:text-blue-400 transition-colors"></i>
+                        </div>
+                        <h4 class="font-semibold text-white">Unix / Linux</h4>
+                        <p class="text-sm text-gray-400 mt-2">OS Security & Access Controls</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SETUP VIEW ==================== -->
+        <div id="setup-view" class="view-section hidden space-y-6">
+            <div class="mb-4">
+                <button onclick="navigateTo('landing-view')" class="text-gray-400 hover:text-white transition-colors text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Environment Selection
+                </button>
+            </div>
+
+            <div class="max-w-2xl mx-auto bg-gray-800 rounded-xl border border-gray-700 shadow-xl overflow-hidden">
+                <div class="bg-gray-750 border-b border-gray-700 p-6 bg-gradient-to-r from-gray-800 to-gray-750">
+                    <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+                        <i class="fa-solid fa-terminal text-blue-400"></i> Pre-Analysis Setup
+                    </h2>
+                    <p class="text-gray-400 mt-2 text-sm">Please provide the environment details for the final export report. This information is stored temporarily in your browser.</p>
+                </div>
+                
+                <form id="setup-form" class="p-6 space-y-6">
+                    <div>
+                        <label for="clientName" class="block text-sm font-medium text-gray-300 mb-2">Client / Organization Name <span class="text-red-400">*</span></label>
+                        <input type="text" id="clientName" required class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="e.g., Acme Corp">
+                    </div>
+
+                    <div>
+                        <label for="serverName" class="block text-sm font-medium text-gray-300 mb-2">Linux Server Hostname <span class="text-red-400">*</span></label>
+                        <input type="text" id="serverName" required class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="e.g., prd-lnx-db01">
+                    </div>
+
+                    <div>
+                        <label for="serverType" class="block text-sm font-medium text-gray-300 mb-2">Server Infrastructure Type <span class="text-red-400">*</span></label>
+                        <div class="relative">
+                            <select id="serverType" required class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2.5 text-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                                <option value="" disabled selected>Select an infrastructure type...</option>
+                                <option value="Virtual Machine (VM)">Virtual Machine (VM)</option>
+                                <option value="Physical Server (Bare Metal)">Physical Server (Bare Metal)</option>
+                                <option value="Cloud Instance (EC2/VM)">Cloud Instance (EC2/Azure VM)</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
+                                <i class="fa-solid fa-chevron-down text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 flex justify-end">
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 px-6 rounded-lg shadow shadow-blue-500/20 transition-colors flex items-center gap-2">
+                            Continue to Upload <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ==================== UPLOAD VIEW ==================== -->
+        <div id="upload-view" class="view-section hidden flex flex-col h-[calc(100vh-140px)]">
+            <div class="mb-4">
+                <button onclick="navigateTo('setup-view')" class="text-gray-400 hover:text-white transition-colors text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Setup
+                </button>
+            </div>
+
+            <div class="flex-grow max-w-4xl mx-auto w-full">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-white mb-3">Unix/Linux ITGC Analysis</h2>
+                    <p class="text-gray-300 max-w-2xl mx-auto leading-relaxed">
+                        The collector script runs non-intrusive commands on the target server to gather configuration data. It generates both a <code class="bg-gray-800 text-blue-300 px-1 rounded">.TXT</code> and an <code class="bg-gray-800 text-blue-300 px-1 rounded">.HTML</code> file. You may upload either format below to begin the analysis.
+                    </p>
+                </div>
+
+                <div class="bg-gray-800 border-2 border-dashed border-gray-600 rounded-xl p-10 flex flex-col items-center justify-center transition-colors hover:border-blue-500 group relative">
+                    <input type="file" id="evidence-upload" accept=".txt,.html" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="handleFileUpload(event)">
+                    
+                    <div class="w-20 h-20 rounded-full bg-gray-700 flex items-center justify-center mb-6 group-hover:bg-blue-500/20 group-hover:text-blue-400 transition-colors text-gray-400">
+                        <i class="fa-solid fa-cloud-arrow-up text-4xl"></i>
+                    </div>
+                    
+                    <h3 class="text-xl font-medium text-white mb-2" id="upload-status-title">Drag & Drop or Click to Upload</h3>
+                    <p class="text-gray-400 text-sm text-center" id="upload-status-desc">Supported formats: .txt or .html generated by the collector script.</p>
+                    
+                    <div id="file-success" class="hidden mt-6 flex items-center text-emerald-400 bg-emerald-500/10 px-4 py-2 rounded border border-emerald-500/20">
+                        <i class="fa-solid fa-circle-check mr-2"></i> File loaded successfully. Ready for analysis.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sticky Action Bar for Upload View -->
+            <div class="sticky bottom-0 bg-gray-800 border-t border-gray-700 p-4 -mx-6 mt-8 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] flex justify-end">
+                <button id="btn-run-analysis" onclick="runAnalysis()" disabled class="bg-blue-600 disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed hover:bg-blue-500 text-white font-medium py-2.5 px-8 rounded-lg shadow shadow-blue-500/20 transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-microchip"></i> Run Analysis
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== RESULTS VIEW ==================== -->
+        <div id="results-view" class="view-section hidden pb-20">
+            <!-- Header for results view -->
+            <div class="flex justify-between items-end mb-6 border-b border-gray-700 pb-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie text-blue-400"></i> Analysis Dashboard
+                    </h2>
+                    <p class="text-gray-400 text-sm mt-1">Reviewing extracted configuration data against standard ITGC baselines.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Rules Library (Left Col) -->
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden shadow-lg">
+                        <div class="bg-gray-750 px-5 py-3 border-b border-gray-700">
+                            <h3 class="text-blue-400 font-semibold uppercase tracking-wider text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-book-bookmark"></i> Rules Library
+                            </h3>
+                        </div>
+                        <div class="p-5 space-y-4">
+                            <div class="border-l-2 border-emerald-500 pl-3">
+                                <p class="text-white font-medium text-sm">Password Complexity</p>
+                                <p class="text-gray-400 text-xs mt-1">Enforce strong passwords (min 8 chars, mixed case, numbers, symbols).</p>
+                            </div>
+                            <div class="border-l-2 border-amber-500 pl-3">
+                                <p class="text-white font-medium text-sm">Root Login Prevention</p>
+                                <p class="text-gray-400 text-xs mt-1">Direct SSH login as root should be disabled (PermitRootLogin no).</p>
+                            </div>
+                            <div class="border-l-2 border-gray-500 pl-3">
+                                <p class="text-white font-medium text-sm">Account Lockout</p>
+                                <p class="text-gray-400 text-xs mt-1">Lock account after N failed attempts to prevent brute force.</p>
+                            </div>
+                            <div class="border-l-2 border-emerald-500 pl-3">
+                                <p class="text-white font-medium text-sm">Sudo Privileges</p>
+                                <p class="text-gray-400 text-xs mt-1">Ensure wheel/sudo group access is restricted to authorized users.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Control Matrix (Right Col) -->
+                <div class="lg:col-span-2">
+                    <div class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden shadow-lg">
+                        <div class="bg-gray-750 px-5 py-3 border-b border-gray-700 flex justify-between items-center">
+                            <h3 class="text-blue-400 font-semibold uppercase tracking-wider text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-table-list"></i> Control Matrix
+                            </h3>
+                            <span class="bg-gray-700 text-gray-300 text-xs px-2 py-1 rounded">Mock Results</span>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm whitespace-nowrap">
+                                <thead class="bg-gray-800/50 text-gray-400 text-xs uppercase border-b border-gray-700">
+                                    <tr>
+                                        <th class="px-5 py-3 font-medium">Control Element</th>
+                                        <th class="px-5 py-3 font-medium">Observed Value</th>
+                                        <th class="px-5 py-3 font-medium">Risk Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-700 text-gray-200">
+                                    <tr class="hover:bg-gray-750/50 transition-colors">
+                                        <td class="px-5 py-4 font-medium">SSH Root Login</td>
+                                        <td class="px-5 py-4 font-mono text-xs">PermitRootLogin yes</td>
+                                        <td class="px-5 py-4">
+                                            <span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20">
+                                                <i class="fa-solid fa-triangle-exclamation"></i> High Risk
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-750/50 transition-colors">
+                                        <td class="px-5 py-4 font-medium">Password Min Length</td>
+                                        <td class="px-5 py-4 font-mono text-xs">PASS_MIN_LEN = 12</td>
+                                        <td class="px-5 py-4">
+                                            <span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                                <i class="fa-solid fa-check"></i> Compliant
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-750/50 transition-colors">
+                                        <td class="px-5 py-4 font-medium">Password Expiration</td>
+                                        <td class="px-5 py-4 font-mono text-xs">PASS_MAX_DAYS = 90</td>
+                                        <td class="px-5 py-4">
+                                            <span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                                <i class="fa-solid fa-check"></i> Compliant
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-750/50 transition-colors">
+                                        <td class="px-5 py-4 font-medium">SSH Protocol</td>
+                                        <td class="px-5 py-4 font-mono text-xs">Protocol 2</td>
+                                        <td class="px-5 py-4">
+                                            <span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                                <i class="fa-solid fa-check"></i> Compliant
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-750/50 transition-colors">
+                                        <td class="px-5 py-4 font-medium">Unowned Files</td>
+                                        <td class="px-5 py-4 font-mono text-xs">Found 14 orphan files</td>
+                                        <td class="px-5 py-4">
+                                            <span class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                                                <i class="fa-solid fa-circle-exclamation"></i> Medium Risk
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sticky Action Bar for Results -->
+            <div class="fixed bottom-0 left-0 right-0 bg-gray-800 border-t border-gray-700 p-4 shadow-[0_-4px_15px_-3px_rgba(0,0,0,0.5)] z-40">
+                <div class="max-w-6xl mx-auto flex justify-between items-center">
+                    <button onclick="downloadCollector()" class="text-gray-300 hover:text-white hover:bg-gray-700 py-2 px-4 rounded transition-colors flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-download"></i> Download Collector Script
+                    </button>
+                    
+                    <button onclick="exportAssessment()" class="bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-6 rounded shadow shadow-blue-500/20 transition-colors flex items-center gap-2">
+                        <i class="fa-solid fa-file-export"></i> Export Assessment
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Global Scripts -->
+    <script>
+        // Application State
+        const appState = {
+            clientName: '',
+            serverName: '',
+            serverType: '',
+            fileContent: '',
+            fileName: ''
+        };
+
+        // Navigation Manager
+        function navigateTo(viewId) {
+            // Hide all views
+            document.querySelectorAll('.view-section').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('animate-fade-in');
+            });
+            
+            // Show target view
+            const target = document.getElementById(viewId);
+            if(target) {
+                target.classList.remove('hidden');
+                // Simple fade in effect class addition (handled by tailwind in a real scenario, simulated here)
+                target.style.opacity = '0';
+                setTimeout(() => {
+                    target.style.transition = 'opacity 0.3s ease';
+                    target.style.opacity = '1';
+                }, 10);
+            }
+        }
+
+        // Setup Form Handler
+        document.getElementById('setup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Save state
+            appState.clientName = document.getElementById('clientName').value;
+            appState.serverName = document.getElementById('serverName').value;
+            appState.serverType = document.getElementById('serverType').value;
+            
+            // Proceed to upload
+            navigateTo('upload-view');
+        });
+
+        // File Upload Logic
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            appState.fileName = file.name;
+            const titleElement = document.getElementById('upload-status-title');
+            const descElement = document.getElementById('upload-status-desc');
+            const successElement = document.getElementById('file-success');
+            const runBtn = document.getElementById('btn-run-analysis');
+
+            // Update UI indicating processing
+            titleElement.innerText = "Processing...";
+            titleElement.classList.add("text-blue-400");
+            descElement.innerText = file.name;
+
+            const reader = new FileReader();
+            
+            reader.onload = (e) => {
+                let content = e.target.result;
+                
+                // If it's an HTML file, extract just the inner text
+                if (file.name.toLowerCase().endsWith('.html')) {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(content, 'text/html');
+                    // Extract body text, removing HTML structure
+                    content = doc.body.innerText || doc.body.textContent;
+                }
+
+                // Store raw text content in state
+                appState.fileContent = content;
+
+                // Update UI to success state
+                titleElement.innerText = "Ready for Analysis";
+                titleElement.classList.remove("text-blue-400");
+                successElement.classList.remove('hidden');
+                
+                // Enable run button
+                runBtn.disabled = false;
+            };
+
+            reader.onerror = () => {
+                titleElement.innerText = "Error reading file";
+                titleElement.classList.add("text-red-400");
+            };
+
+            reader.readAsText(file);
+        }
+
+        function runAnalysis() {
+            if(!appState.fileContent) {
+                alert("Please upload a valid evidence file first.");
+                return;
+            }
+            // In a real application, regex parsing would happen here against appState.fileContent
+            navigateTo('results-view');
+        }
+
+        // Export Actions
+        function exportAssessment() {
+            console.log("=========================================");
+            console.log("      ITGC ASSESSMENT EXPORT INITIATED   ");
+            console.log("=========================================");
+            console.log("Client Name   :", appState.clientName);
+            console.log("Server Name   :", appState.serverName);
+            console.log("Server Type   :", appState.serverType);
+            console.log("Evidence File :", appState.fileName);
+            console.log("=========================================");
+            
+            // Custom UI Notification instead of alert
+            showNotification("Assessment report data logged to console successfully. Check dev tools.", "success");
+        }
+
+        function downloadCollector() {
+            // Mock collector script generation
+            const scriptContent = `#!/bin/bash
+# ITGC Unix/Linux Evidence Collector Script
+# Generates both TXT and HTML output
+
+OUTPUT_PREFIX="evidence_$(hostname)_$(date +%Y%m%d)"
+TXT_FILE="$OUTPUT_PREFIX.txt"
+HTML_FILE="$OUTPUT_PREFIX.html"
+
+echo "Running ITGC checks..."
+
+# Text generation
+echo "=== PASSWORD POLICY ===" > $TXT_FILE
+grep -E "PASS_MAX_DAYS|PASS_MIN_LEN" /etc/login.defs >> $TXT_FILE
+
+# HTML generation
+echo "<html><body><h2>Password Policy</h2><pre>" > $HTML_FILE
+grep -E "PASS_MAX_DAYS|PASS_MIN_LEN" /etc/login.defs >> $HTML_FILE
+echo "</pre></body></html>" >> $HTML_FILE
+
+echo "Complete. Upload $TXT_FILE or $HTML_FILE to the Analyzer Workspace."
+`;
+            
+            const blob = new Blob([scriptContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'itgc_collector.sh';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification("Collector script downloaded.", "info");
+        }
+
+        // Helper Notification System
+        function showNotification(message, type) {
+            const notif = document.createElement('div');
+            notif.className = `fixed top-6 right-6 px-6 py-3 rounded shadow-lg flex items-center gap-3 z-50 transform transition-all duration-300 translate-x-10 opacity-0`;
+            
+            if (type === 'success') {
+                notif.classList.add('bg-gray-800', 'border-l-4', 'border-blue-500', 'text-white');
+                notif.innerHTML = `<i class="fa-solid fa-circle-check text-blue-400"></i> ${message}`;
+            } else {
+                notif.classList.add('bg-gray-800', 'border-l-4', 'border-gray-500', 'text-white');
+                notif.innerHTML = `<i class="fa-solid fa-info-circle text-gray-400"></i> ${message}`;
+            }
+
+            document.body.appendChild(notif);
+            
+            // Animate in
+            setTimeout(() => {
+                notif.classList.remove('translate-x-10', 'opacity-0');
+            }, 10);
+
+            // Animate out
+            setTimeout(() => {
+                notif.classList.add('translate-x-10', 'opacity-0');
+                setTimeout(() => notif.remove(), 300);
+            }, 3000);
+        }
+
+    </script>
+</body>
+</html>
